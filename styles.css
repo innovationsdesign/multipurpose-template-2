@@ -139,6 +139,7 @@ header {
     position: relative;
     right: 40px;
     z-index: 105;
+    cursor: pointer;
 
     .menu-close {
       display: none;
