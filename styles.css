@@ -207,7 +207,8 @@ header {
       font-weight: bold;
       width: 100%;
       padding-inline: 4rem;
-      padding-block: 6rem;
+      /*padding-block: 6rem;*/
+      padding-top: 2rem;
 
       li {
         a {
