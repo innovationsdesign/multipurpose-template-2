@@ -1,18 +1,32 @@
 const swiper = new Swiper(".hero-swiper", {
-  // Optional parameters
   direction: "horizontal",
   loop: true,
-
-  autoplay: {
-    delay: 4000, // time in milliseconds between slides (3s here)
-    disableOnInteraction: false, // keeps autoplay working after user interacts
-  },
-
-  // Navigation arrows345
+  autoplay: false, // Start with autoplay disabled
   navigation: {
     nextEl: ".swiper-hero-button-next",
     prevEl: ".swiper-hero-button-prev",
   },
+});
+
+const video = document.getElementById("hero-video");
+
+// Optional: Block user from manually skipping before video ends
+swiper.allowTouchMove = false;
+
+// Autoplay the video if possible
+video.play().catch((err) => {
+  console.warn("Video autoplay failed:", err);
+});
+
+// When the video ends, move to next slide and start autoplay
+video.addEventListener("ended", function () {
+  swiper.slideNext(); // Move to next slide
+  swiper.params.autoplay = {
+    delay: 4000,
+    disableOnInteraction: false,
+  };
+  swiper.autoplay.start(); // Start autoplay after video
+  swiper.allowTouchMove = true; // Re-enable manual swiping
 });
 
 //menu icon
