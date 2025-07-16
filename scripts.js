@@ -6,27 +6,40 @@ const swiper = new Swiper(".hero-swiper", {
     nextEl: ".swiper-hero-button-next",
     prevEl: ".swiper-hero-button-prev",
   },
-});
+  on: {
+    slideChange: function (swiper) {
+      // Pass 'swiper' as a parameter here
+      // Now you can safely use 'swiper' inside this function
+      const currentSlide = swiper.slides[swiper.activeIndex];
+      const video = currentSlide.querySelector("video");
 
-const video = document.getElementById("hero-video");
+      // Pause all videos (just in case)
+      document.querySelectorAll("video").forEach((vid) => {
+        vid.pause();
+        vid.currentTime = 0;
+      });
 
-// Optional: Block user from manually skipping before video ends
-swiper.allowTouchMove = false;
+      // If we’re back to the real first slide with video
+      if (video && swiper.realIndex === 0) {
+        swiper.autoplay.stop(); // Stop autoplay while video plays
+        swiper.allowTouchMove = false; // Optional: prevent user skipping
 
-// Autoplay the video if possible
-video.play().catch((err) => {
-  console.warn("Video autoplay failed:", err);
-});
+        video.play().catch((err) => {
+          console.warn("Video replay failed:", err);
+        });
 
-// When the video ends, move to next slide and start autoplay
-video.addEventListener("ended", function () {
-  swiper.slideNext(); // Move to next slide
-  swiper.params.autoplay = {
-    delay: 4000,
-    disableOnInteraction: false,
-  };
-  swiper.autoplay.start(); // Start autoplay after video
-  swiper.allowTouchMove = true; // Re-enable manual swiping
+        video.onended = function () {
+          swiper.slideNext();
+          swiper.params.autoplay = {
+            delay: 4000,
+            disableOnInteraction: false,
+          };
+          swiper.autoplay.start();
+          swiper.allowTouchMove = true;
+        };
+      }
+    },
+  },
 });
 
 //menu icon
